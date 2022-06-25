@@ -272,7 +272,7 @@ const Home = () => {
           <div className="ml-10 mt-6 lg:mt-6 md:mt-6">
             <button
               className="bg-[url('/button-bg.svg')] bg-no-repeat bg-top w-full px-4 py-2 rounded-lg text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
-              onClick={() => exportAsImage(exportRef.current, "test")}
+              onClick={() => exportAsImage(exportRef.current, `${tweetDetails?.includes?.users?.[0].name}_${tweetDetails?.data?.id}`)}
             >
               Export
             </button>

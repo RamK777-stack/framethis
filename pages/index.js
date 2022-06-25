@@ -6,12 +6,32 @@ import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import html2canvas from "html2canvas";
 
 const colorOptions = [
-  { name: "Candy", colorCode: "bg-gradient-to-r from-indigo-500 to-pink-300" },
-  { name: "Rose", colorCode: "bg-gradient-to-r from-[#f093fb] to-[#f5576c]" },
-  { name: "Blue", colorCode: "bg-gradient-to-r from-[#0093E9] to-[#80D0C7]" },
-  { name: "Cosmic", colorCode: "bg-gradient-to-r from-[#ff00cc] to-[#333399]" },
-  { name: "Love", colorCode: "bg-gradient-to-r from-[#00DBDE] to-[#FC00FF]" },
-  { name: "Milk", colorCode: "bg-white text-gray-900 font-semibold" },
+  {
+    name: "Candy",
+    colorCode:
+      "text-white font-semibold bg-gradient-to-r from-indigo-500 to-pink-300",
+  },
+  {
+    name: "Rose",
+    colorCode:
+      "text-white font-semibold bg-gradient-to-r from-[#f093fb] to-[#f5576c]",
+  },
+  {
+    name: "Blue",
+    colorCode:
+      "text-white font-semibold bg-gradient-to-r from-[#0093E9] to-[#80D0C7]",
+  },
+  {
+    name: "Cosmic",
+    colorCode:
+      "text-white font-semibold bg-gradient-to-r from-[#ff00cc] to-[#333399]",
+  },
+  {
+    name: "Love",
+    colorCode:
+      "text-white font-semibold bg-gradient-to-r from-[#00DBDE] to-[#FC00FF]",
+  },
+  { name: "Milk", colorCode: "bg-white text-black font-semibold" },
 ];
 
 const Home = () => {
@@ -112,31 +132,42 @@ const Home = () => {
                 e.key === "Enter" && retrieveTweetIDFromURL(e.target.value)
               }
             />
-            <small className="text-slate-200">Copy & paste URL here and hit enter</small>
+            <small className="text-slate-200">
+              Copy & paste URL here and hit enter
+            </small>
           </div>
 
           <div className="lg:mt-16 md:mt-8 mt-5 px-5 lg:px-20 md:px-20 pb-10">
             <div
-              className={`flex flex-col text-white min-h-[12em] w-full ${
+              className={`flex flex-col min-h-[12em] w-full ${
                 selected.colorCode || "bg-white"
               } rounded-lg 
               ${padding} cursor-pointer`}
               onClick={openTweet}
               ref={exportRef}
             >
-              <div className="flex items-center space-x-2">
-                <Image
-                  src={
-                    tweetDetails?.includes?.users?.[0].profile_image_url ||
-                    "/author.jpg"
-                  }
-                  height={70}
-                  width={70}
-                  className="rounded-full"
-                />
-                <div className="flex flex-col text-sm text-left">
-                  <span>{tweetDetails?.includes?.users?.[0].name}</span>
-                  <span>@{tweetDetails?.includes?.users?.[0].username}</span>
+              <div className="flex">
+                <div className="flex flex-1 items-center space-x-2">
+                  <Image
+                    src={
+                      tweetDetails?.includes?.users?.[0].profile_image_url ||
+                      "/author.jpg"
+                    }
+                    height={70}
+                    width={70}
+                    className="rounded-full"
+                  />
+                  <div className="flex flex-col text-left">
+                    <span className="font-bold text-md">
+                      {tweetDetails?.includes?.users?.[0].name}
+                    </span>
+                    <span className="font-thin text-xs">
+                      @{tweetDetails?.includes?.users?.[0].username}
+                    </span>
+                  </div>
+                </div>
+                <div className="justify-end text-right">
+                  <Image src={selected?.colorCode.includes("bg-white") ? "/twitter.png": "/twitter-white.png" }height={20} width={20} />
                 </div>
               </div>
               <div className="text-left">
@@ -230,11 +261,11 @@ const Home = () => {
               </div>
               <div
                 onClick={() => {
-                  setPadding("p-12");
+                  setPadding("p-10");
                 }}
                 className="rounded-lg bg-gray-200 bg-opacity-10 w-auto px-2 py-2 cursor-pointer mt-1 hover:text-gray-200"
               >
-                48px
+                40px
               </div>
             </div>
           </div>

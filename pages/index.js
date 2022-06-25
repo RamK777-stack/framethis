@@ -1,11 +1,9 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
-import { Client } from "twitter-api-sdk";
-
-const client = new Client(process.env.NEXT_PUBLIC_BEARER_TOKEN);
+import html2canvas from "html2canvas";
 
 const people = [
   { name: "Red" },
@@ -17,14 +15,74 @@ const people = [
 
 const Home = () => {
   const [selected, setSelected] = useState(people[0]);
+  const [tweetDetails, setTweetDetails] = useState();
+  const [tweetURL, setTweetURL] = useState(
+    "https://twitter.com/ShaneAParrish/status/1538892208237166592"
+  );
+  const exportRef = useRef();
 
-  const getTweetById = async () => {
-    const params = {
-      "tweet.fields": "author_id",
-      "user.fields": "created_at,profile_image_url,name,username"
+  const getTweetById = async (id) => {
+    fetch("/api/tweet?" + new URLSearchParams({ id }))
+      .then((data) => data.text())
+      .then((details) => {
+        if (details) {
+          setTweetDetails(JSON.parse(details));
+        }
+      })
+      .catch((error) => {
+        console.log("request failed", error);
+        alert(error);
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    retrieveTweetIDFromURL(tweetURL);
+  }, []);
+
+  const retrieveTweetIDFromURL = (URL) => {
+    URL = URL.replace(/\?.*/g, "$'");
+    const regex =
+      /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)$/;
+    if (regex.test(URL)) {
+      setTweetURL(URL);
+      const arr = URL.split("/");
+      const tweetId = arr[arr.length - 1];
+      console.log(tweetId.toString());
+      getTweetById(tweetId.toString());
+    } else {
+      alert("Enter valid tweet URL");
     }
-    const tweet = await client.tweets.findTweetById("1538892208237166592", params);
-    console.log(tweet.data.text);
+  };
+
+  const openTweet = () => {
+    if (typeof window !== undefined) {
+      window?.open(tweetURL, "_blank");
+    }
+  };
+
+  const renderTweetBody = (text) => {
+    return text?.replace(" ", "&nbsp;").replace("\n", "<br>");
+  };
+
+  const exportAsImage = async (el, imageFileName) => {
+    const canvas = await html2canvas(el);
+    const image = canvas.toDataURL("image/jpeg", 1.0);
+    downloadImage(image, imageFileName)
+  };
+
+  const downloadImage = (blob, fileName) => {
+    const fakeLink = window.document.createElement("a");
+    fakeLink.style = "display:none;";
+    fakeLink.download = fileName;
+
+    fakeLink.href = blob;
+
+    document.body.appendChild(fakeLink);
+    fakeLink.click();
+    document.body.removeChild(fakeLink);
+
+    fakeLink.remove();
   };
 
   return (
@@ -42,28 +100,45 @@ const Home = () => {
               id="candidates"
               type="search"
               name="search"
+              value={tweetURL}
+              onChange={(e) => {
+                setTweetURL(e.target.value);
+              }}
               placeholder="Enter Tweet URL"
               className="bg-transparent w-full h-10 rounded-lg border p-2 text-white"
-              onKeyDown={getTweetById}
+              onKeyDown={(e) =>
+                e.key === "Enter" && retrieveTweetIDFromURL(e.target.value)
+              }
             />
           </div>
 
           <div className="lg:mt-20 md:mt-10 mt-5 px-5 lg:px-20 md:px-20 pb-10">
-            <div className="flex flex-col text-white min-h-[12em] w-full bg-gradient-to-r from-indigo-500 to-pink-300 rounded-lg p-5">
+            <div
+              className="flex flex-col text-white min-h-[12em] w-full bg-gradient-to-r from-indigo-500 to-pink-300 rounded-lg p-5 cursor-pointer"
+              onClick={openTweet}
+              ref={exportRef}
+            >
               <div className="flex items-center space-x-2">
                 <Image
-                  src="/author.jpg"
+                  src={
+                    tweetDetails?.includes?.users?.[0].profile_image_url ||
+                    "/author.jpg"
+                  }
                   height={70}
                   width={70}
                   className="rounded-full"
                 />
                 <div className="flex flex-col text-sm text-left">
-                  <span>Shane Parrish</span>
-                  <span>@ShaneAParrish</span>
+                  <span>{tweetDetails?.includes?.users?.[0].name}</span>
+                  <span>@{tweetDetails?.includes?.users?.[0].username}</span>
                 </div>
               </div>
               <div className="text-left">
-                <p>Amateurs have a goal. Professionals have a process.</p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: renderTweetBody(tweetDetails?.data?.text),
+                  }}
+                ></p>
               </div>
             </div>
           </div>
@@ -139,7 +214,10 @@ const Home = () => {
             </div>
           </div>
           <div className="ml-10 mt-6 lg:mt-6 md:mt-6">
-            <button className="bg-[url('/button-bg.svg')] bg-no-repeat bg-top w-full px-4 py-2 rounded-lg text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
+            <button
+              className="bg-[url('/button-bg.svg')] bg-no-repeat bg-top w-full px-4 py-2 rounded-lg text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+              onClick={() => exportAsImage(exportRef.current, "test")}
+            >
               Export
             </button>
           </div>

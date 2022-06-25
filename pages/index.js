@@ -111,9 +111,15 @@ const Home = () => {
     <div className="font-Inter bg-[url('/background.svg')] w-full min-h-screen bg-center bg-cover flex flex-col items-center justify-center py-2">
       <Head>
         <title>Framethis</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/app-icon.ico" />
       </Head>
-
+      <p
+        className="absolute top-10 right-5"
+        dangerouslySetInnerHTML={{
+          __html:
+            '<a href="https://www.producthunt.com/posts/framethis?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-framethis" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=350591&theme=light" alt="FrameThis - Create&#0032;beautiful&#0032;images&#0032;of&#0032;tweet | Product Hunt" style="width: 240px; height: 44px;" width="240" height="44" /></a>',
+        }}
+      ></p>
       <main className="prose flex w-full flex-1 flex-col items-center justify-center scale-95">
         <div className="lg:bg-[url('/box.png')] md:lg:bg-[url('/box.png')] bg-center bg-cover w-full h-auto rounded-lg text-center">
           <h3 className="text-slate-200">Enter Tweet URL</h3>
@@ -167,7 +173,15 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="justify-end text-right">
-                  <Image src={selected?.colorCode.includes("bg-white") ? "/twitter.png": "/twitter-white.png" }height={20} width={20} />
+                  <Image
+                    src={
+                      selected?.colorCode.includes("bg-white")
+                        ? "/twitter.png"
+                        : "/twitter-white.png"
+                    }
+                    height={20}
+                    width={20}
+                  />
                 </div>
               </div>
               <div className="text-left">
@@ -272,7 +286,12 @@ const Home = () => {
           <div className="ml-10 mt-6 lg:mt-6 md:mt-6">
             <button
               className="bg-[url('/button-bg.svg')] bg-no-repeat bg-top w-full px-4 py-2 rounded-lg text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
-              onClick={() => exportAsImage(exportRef.current, `${tweetDetails?.includes?.users?.[0].name}_${tweetDetails?.data?.id}`)}
+              onClick={() =>
+                exportAsImage(
+                  exportRef.current,
+                  `${tweetDetails?.includes?.users?.[0].name}_${tweetDetails?.data?.id}`
+                )
+              }
             >
               Export
             </button>
@@ -281,18 +300,37 @@ const Home = () => {
       </main>
 
       <footer className="text-gray-400 text-xs mt-2 cursor-pointer">
-        <a href="https://writeonce.dev/" target="_blank" className="flex">
-          <h4> Made by </h4>
-          <div className="flex ml-1">
-            <Image
-              src="/icon.png"
-              alt="Writeonce Logo"
-              width={20}
-              height={20}
-            />
-            <h4 className="text-white ml-1">Writeonce</h4>
+        <div className="flex justify-center items-center content-center space-x-8">
+          <a
+            className="flex space-x-1"
+            href="https://twitter.com/ram00759595"
+            target="_blank"
+          >
+            <h4>Send Feedback </h4>
+            <div>
+              <Image src="/arrow-top-right.svg" height={12} width={14} />
+            </div>
+          </a>
+
+          <div className="flex space-x-1 text-xs">
+            <a
+              href="https://writeonce.dev/"
+              target="_blank"
+              className="flex justify-center items-center content-center"
+            >
+              <h4> Made by </h4>
+              <div className="flex">
+                <Image
+                  src="/icon.png"
+                  alt="Writeonce Logo"
+                  width={20}
+                  height={20}
+                />
+              </div>
+              <h4 className="text-slate-200">Writeonce</h4>
+            </a>
           </div>
-        </a>
+        </div>
       </footer>
     </div>
   );

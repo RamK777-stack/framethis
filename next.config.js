@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   images: {
-    domains: ['localhost', 'res.cloudinary.com', 'pbs.twimg.com'],
+    domains: ['localhost', 'res.cloudinary.com', 'pbs.twimg.com', "api.producthunt.com"],
   },
   async headers() {
     return [

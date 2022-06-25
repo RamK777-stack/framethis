@@ -114,7 +114,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="prose flex w-full flex-1 flex-col items-center justify-center">
+      <main className="prose flex w-full flex-1 flex-col items-center justify-center scale-95">
         <div className="lg:bg-[url('/box.png')] md:lg:bg-[url('/box.png')] bg-center bg-cover w-full h-auto rounded-lg text-center">
           <h3 className="text-slate-200">Enter Tweet URL</h3>
           <div className="px-5 lg:px-20 md:px-20">
